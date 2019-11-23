@@ -20,12 +20,12 @@ class BarChart {
     final barCount = ranks.length;
     final barDistance = size.width / (1 + barCount);
     final barWidth = barDistance * barWidthFraction;
-    final startX = barDistance - barWidth / 2;
+    final starty = barDistance - barWidth / 2;
     final bars = List.generate(
       barCount,
           (i) => Bar(
         ranks[i],
-        startX + i * barDistance,
+        starty + i * barDistance,
         barWidth,
         random.nextDouble() * size.height,
         ColorPalette.primary[ranks[i]],
@@ -82,22 +82,22 @@ class BarChartTween extends Tween<BarChart> {
 }
 
 class Bar {
-  Bar(this.rank, this.x, this.width, this.height, this.color);
+  Bar(this.rank, this.y, this.width, this.height, this.color);
 
   final int rank;
-  final double x;
+  final double y;
   final double width;
   final double height;
   final Color color;
 
-  Bar get collapsed => Bar(rank, x, 0.0, 0.0, color);
+  Bar get collapsed => Bar(rank, y, 0.0, 0.0, color);
   bool operator <(Bar other) => rank < other.rank;
 
   static Bar lerp(Bar begin, Bar end, double t) {
     assert(begin.rank == end.rank);
     return Bar(
       begin.rank,
-      lerpDouble(begin.x, end.x, t),
+      lerpDouble(begin.y, end.y, t),
       lerpDouble(begin.width, end.width, t),
       lerpDouble(begin.height, end.height, t),
       Color.lerp(begin.color, end.color, t),
@@ -129,7 +129,7 @@ class BarChartPainter extends CustomPainter {
     for (final bar in chart.bars) {
       paint.color = bar.color;
       canvas.drawRect(
-        Rect.fromLTWH(bar.x, size.height - bar.height, bar.width, bar.height),
+        Rect.fromLTWH(0, bar.y, bar.height, bar.width),
         paint,
       );
     }
