@@ -14,35 +14,44 @@ class BarChart {
     return BarChart(<Bar>[]);
   }
 
-  factory BarChart.random(Size size, Random random) {
-    const barWidthFraction = 0.75;
-    final ranks = selectRanks(random, ColorPalette.primary.length);
+  factory BarChart.makeBars(Size size, int iterNumber) {
+
+    final List<List<double>> heightsData = [
+      [10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0],
+      [20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0],
+      [30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0],
+      [40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0],
+    ];
+
+    final ranks = selectRanks(heightsData[iterNumber], ColorPalette.primary.length);
     final barCount = ranks.length;
     final barDistance = size.width / (1 + barCount);
+    const barWidthFraction = 0.75;
     final barWidth = barDistance * barWidthFraction;
     final starty = barDistance - barWidth / 2;
+
     final bars = List.generate(
       barCount,
-          (i) => Bar(
-        ranks[i],
-        starty + i * barDistance,
-        barWidth,
-        random.nextDouble() * size.height,
-        ColorPalette.primary[ranks[i]],
+          (barIndex) => Bar(
+            ranks[barIndex],
+            starty + barIndex * barDistance,
+            barWidth,
+            heightsData[iterNumber][barIndex],
+            ColorPalette.primary[ranks[barIndex]],
       ),
     );
     return BarChart(bars);
   }
 
-  static List<int> selectRanks(Random random, int cap) {
-    final ranks = <int>[];
-    var rank = 0;
-    while (true) {
-      if (random.nextDouble() < 0.2) rank++;
-      if (cap <= rank) break;
-      ranks.add(rank);
-      rank++;
-    }
+  static List<int> selectRanks(List<double> currHeights, int cap) {
+    final ranks = <int>[0, 1, 2, 3, 4, 5, 6];
+//    var rank = 0;
+//    while (true) {
+//      if (random.nextDouble() < 0.2) rank++;
+//      if (cap <= rank) break;
+//      ranks.add(rank);
+//      rank++;
+//    }
     return ranks;
   }
 }
