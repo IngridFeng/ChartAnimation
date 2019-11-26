@@ -22,13 +22,14 @@ class ChartPage extends StatefulWidget {
 
 class ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
   static const size = const Size(400.0, 400.0);
-  int counter = 0;
+  int counter;
   AnimationController animation;
   BarChartTween tween;
 
   @override
   void initState() {
     super.initState();
+    counter = 0;
     animation = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
@@ -71,10 +72,25 @@ class ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.arrow_forward),
-        onPressed: changeData,
-      ),
+      floatingActionButton: new Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: FloatingActionButton(
+              child: Icon(Icons.refresh),
+              onPressed: initState,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: FloatingActionButton(
+              child: Icon(Icons.arrow_forward),
+              onPressed: changeData,
+            ),
+          ),
+        ]
+      )
     );
   }
 }
