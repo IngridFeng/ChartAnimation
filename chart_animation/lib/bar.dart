@@ -14,18 +14,8 @@ class BarChart {
     return BarChart(<Bar>[]);
   }
 
-  factory BarChart.makeBars(Size size, int iterNumber) {
-
-    final List<List<double>> heightsData = [
-      [10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0],
-      [20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0],
-      [30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0],
-      [40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0],
-    ];
-
-    if (iterNumber >= heightsData.length) {return null;}
-
-    final ranks = selectRanks(heightsData[iterNumber], ColorPalette.primary.length);
+  factory BarChart.makeBars(Size size, int iterNumber, List<double> currHeights) {
+    final ranks = selectRanks(currHeights, ColorPalette.primary.length);
     final barCount = ranks.length;
     final barDistance = size.width / (1 + barCount);
     const barWidthFraction = 0.75;
@@ -38,7 +28,7 @@ class BarChart {
             ranks[barIndex],
             starty + barIndex * barDistance,
             barWidth,
-            heightsData[iterNumber][barIndex],
+            currHeights[barIndex],
             ColorPalette.primary[ranks[barIndex]],
       ),
     );
@@ -46,7 +36,14 @@ class BarChart {
   }
 
   static List<int> selectRanks(List<double> currHeights, int cap) {
-    final ranks = <int>[0, 1, 2, 3, 4, 5, 6];
+    final ranks = <int>[];
+    for (final h1 in currHeights) {
+      var rank = 0;
+      for (final h2 in currHeights) {
+        if (h1 > h2) rank++;
+      }
+      ranks.add(rank);
+    }
     return ranks;
   }
 }

@@ -38,6 +38,13 @@ class ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
     super.dispose();
   }
 
+  final List<List<double>> heightsData = [
+    [30.0, 40.0, 10.0, 20.0, 50.0, 60.0, 70.0],
+    [50.0, 60.0, 70.0, 20.0, 30.0, 40.0, 80.0],
+    [50.0, 60.0, 70.0, 80.0, 90.0, 30.0, 40.0],
+    [90.0, 100.0, 40.0, 50.0, 60.0, 70.0, 80.0],
+  ];
+
   void initData() {
     setState(() {
       counter = 0;
@@ -47,20 +54,21 @@ class ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
       );
       tween = BarChartTween(
         BarChart.empty(size),
-        BarChart.makeBars(size, counter),
+        BarChart.makeBars(size, counter, heightsData[counter]),
       );
       animation.forward();
     });
   }
 
   void changeData() {
-    BarChart bars = BarChart.makeBars(size, counter);
-    while (bars != null) {
+    while (counter < heightsData.length) {
       setState(() {
-        tween = BarChartTween(tween.evaluate(animation), bars,);
+        tween = BarChartTween(
+          tween.evaluate(animation),
+          BarChart.makeBars(size, counter, heightsData[counter]),
+        );
         animation.forward(from: 0.0);
         counter++;
-        bars = BarChart.makeBars(size, counter);
       });
     }
   }
