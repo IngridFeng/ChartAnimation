@@ -47,38 +47,32 @@ class ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
   }
 
   void changeData() {
-    setState(() {
-      tween = BarChartTween(
-        tween.evaluate(animation),
-        BarChart.makeBars(size, counter),
-      );
-      animation.forward(from: 0.0);
-      counter++;
-    });
+    BarChart bars = BarChart.makeBars(size, counter);
+    while (bars != null) {
+      setState(() {
+        tween = BarChartTween(tween.evaluate(animation), bars,);
+        animation.forward(from: 0.0);
+        counter++;
+        bars = BarChart.makeBars(size, counter);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: Text(widget.title),),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget> [
-            CustomPaint(
-              size: size,
-              painter: BarChartPainter(tween.animate(animation)),
-            ),
-            Text(
-              'Count: $counter',
-            ),
+            CustomPaint(size: size, painter: BarChartPainter(tween.animate(animation)),),
+            Text('Count: $counter',),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.refresh),
+        child: Icon(Icons.arrow_forward),
         onPressed: changeData,
       ),
     );

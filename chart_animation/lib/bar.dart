@@ -23,6 +23,8 @@ class BarChart {
       [40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0],
     ];
 
+    if (iterNumber >= heightsData.length) {return null;}
+
     final ranks = selectRanks(heightsData[iterNumber], ColorPalette.primary.length);
     final barCount = ranks.length;
     final barDistance = size.width / (1 + barCount);
@@ -45,13 +47,6 @@ class BarChart {
 
   static List<int> selectRanks(List<double> currHeights, int cap) {
     final ranks = <int>[0, 1, 2, 3, 4, 5, 6];
-//    var rank = 0;
-//    while (true) {
-//      if (random.nextDouble() < 0.2) rank++;
-//      if (cap <= rank) break;
-//      ranks.add(rank);
-//      rank++;
-//    }
     return ranks;
   }
 }
