@@ -61,16 +61,16 @@ class ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
   }
 
   void changeData() {
-    while (counter < heightsData.length) {
-      setState(() {
-        tween = BarChartTween(
-          tween.evaluate(animation),
-          BarChart.makeBars(size, counter, heightsData[counter]),
-        );
-        animation.forward(from: 0.0);
-        counter++;
-      });
-    }
+    setState(() {
+      tween = BarChartTween(
+        tween.evaluate(animation),
+        BarChart.makeBars(size, counter, heightsData[counter]),
+      );
+      animation.forward(from: 0.0);
+      counter++;
+    });
+//    while (counter < heightsData.length) {
+//    }
   }
 
   Padding buttonWrapper(IconData icon, Function action) {

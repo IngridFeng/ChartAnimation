@@ -15,7 +15,7 @@ class BarChart {
   }
 
   factory BarChart.makeBars(Size size, int iterNumber, List<double> currHeights) {
-    final ranks = selectRanks(currHeights, ColorPalette.primary.length);
+    final ranks = computeRanks(currHeights);
     final barCount = ranks.length;
     final barDistance = size.width / (1 + barCount);
     const barWidthFraction = 0.75;
@@ -24,25 +24,25 @@ class BarChart {
 
     final bars = List.generate(
       barCount,
-          (barIndex) => Bar(
-            ranks[barIndex],
-            starty + barIndex * barDistance,
+          (i) => Bar(
+            ranks[i],
+            starty + ranks[i] * barDistance,
             barWidth,
-            currHeights[barIndex],
-            ColorPalette.primary[ranks[barIndex]],
+            currHeights[i],
+            ColorPalette.primary[i],
       ),
     );
     return BarChart(bars);
   }
 
-  static List<int> selectRanks(List<double> currHeights, int cap) {
+  static List<int> computeRanks(List<double> currHeights) {
     final ranks = <int>[];
     for (final h1 in currHeights) {
       var rank = 0;
       for (final h2 in currHeights) {
         if (h1 > h2) rank++;
       }
-      ranks.add(rank);
+      ranks.add(currHeights.length - rank);
     }
     return ranks;
   }
