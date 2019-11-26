@@ -14,35 +14,39 @@ class BarChart {
     return BarChart(<Bar>[]);
   }
 
-  factory BarChart.random(Size size, Random random) {
-    const barWidthFraction = 0.75;
-    final ranks = selectRanks(random, ColorPalette.primary.length);
+  factory BarChart.makeBars(Size size, int iterNumber) {
+
+    final List<List<double>> heightsData = [
+      [10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0],
+      [20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0],
+      [30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0],
+      [40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0],
+    ];
+
+    if (iterNumber >= heightsData.length) {return null;}
+
+    final ranks = selectRanks(heightsData[iterNumber], ColorPalette.primary.length);
     final barCount = ranks.length;
     final barDistance = size.width / (1 + barCount);
+    const barWidthFraction = 0.75;
     final barWidth = barDistance * barWidthFraction;
-    final startX = barDistance - barWidth / 2;
+    final starty = barDistance - barWidth / 2;
+
     final bars = List.generate(
       barCount,
-          (i) => Bar(
-        ranks[i],
-        startX + i * barDistance,
-        barWidth,
-        random.nextDouble() * size.height,
-        ColorPalette.primary[ranks[i]],
+          (barIndex) => Bar(
+            ranks[barIndex],
+            starty + barIndex * barDistance,
+            barWidth,
+            heightsData[iterNumber][barIndex],
+            ColorPalette.primary[ranks[barIndex]],
       ),
     );
     return BarChart(bars);
   }
 
-  static List<int> selectRanks(Random random, int cap) {
-    final ranks = <int>[];
-    var rank = 0;
-    while (true) {
-      if (random.nextDouble() < 0.2) rank++;
-      if (cap <= rank) break;
-      ranks.add(rank);
-      rank++;
-    }
+  static List<int> selectRanks(List<double> currHeights, int cap) {
+    final ranks = <int>[0, 1, 2, 3, 4, 5, 6];
     return ranks;
   }
 }
@@ -82,22 +86,22 @@ class BarChartTween extends Tween<BarChart> {
 }
 
 class Bar {
-  Bar(this.rank, this.x, this.width, this.height, this.color);
+  Bar(this.rank, this.y, this.width, this.height, this.color);
 
   final int rank;
-  final double x;
+  final double y;
   final double width;
   final double height;
   final Color color;
 
-  Bar get collapsed => Bar(rank, x, 0.0, 0.0, color);
+  Bar get collapsed => Bar(rank, y, 0.0, 0.0, color);
   bool operator <(Bar other) => rank < other.rank;
 
   static Bar lerp(Bar begin, Bar end, double t) {
     assert(begin.rank == end.rank);
     return Bar(
       begin.rank,
-      lerpDouble(begin.x, end.x, t),
+      lerpDouble(begin.y, end.y, t),
       lerpDouble(begin.width, end.width, t),
       lerpDouble(begin.height, end.height, t),
       Color.lerp(begin.color, end.color, t),
@@ -129,7 +133,7 @@ class BarChartPainter extends CustomPainter {
     for (final bar in chart.bars) {
       paint.color = bar.color;
       canvas.drawRect(
-        Rect.fromLTWH(bar.x, size.height - bar.height, bar.width, bar.height),
+        Rect.fromLTWH(0, bar.y, bar.height, bar.width),
         paint,
       );
     }
