@@ -29,22 +29,28 @@ class ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
   @override
   void initState() {
     super.initState();
-    counter = 0;
-    animation = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-    tween = BarChartTween(
-      BarChart.empty(size),
-      BarChart.makeBars(size, counter),
-    );
-    animation.forward();
+    initData();
   }
 
   @override
   void dispose() {
     animation.dispose();
     super.dispose();
+  }
+
+  void initData() {
+    setState(() {
+      counter = 0;
+      animation = AnimationController(
+        duration: const Duration(milliseconds: 300),
+        vsync: this,
+      );
+      tween = BarChartTween(
+        BarChart.empty(size),
+        BarChart.makeBars(size, counter),
+      );
+      animation.forward();
+    });
   }
 
   void changeData() {
@@ -57,6 +63,16 @@ class ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
         bars = BarChart.makeBars(size, counter);
       });
     }
+  }
+
+  Padding buttonWrapper(IconData icon, Function action) {
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: FloatingActionButton(
+        child: Icon(icon),
+        onPressed: action,
+      ),
+    );
   }
 
   @override
@@ -75,20 +91,9 @@ class ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
       floatingActionButton: new Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: FloatingActionButton(
-              child: Icon(Icons.refresh),
-              onPressed: initState,
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: FloatingActionButton(
-              child: Icon(Icons.arrow_forward),
-              onPressed: changeData,
-            ),
-          ),
+          buttonWrapper(Icons.file_upload, changeData),
+          buttonWrapper(Icons.refresh, initData),
+          buttonWrapper(Icons.arrow_forward, changeData),
         ]
       )
     );
