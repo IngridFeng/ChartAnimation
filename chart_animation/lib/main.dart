@@ -22,28 +22,35 @@ class ChartPage extends StatefulWidget {
 
 class ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
   static const size = const Size(400.0, 400.0);
-  int counter = 0;
+  int counter;
   AnimationController animation;
   BarChartTween tween;
 
   @override
   void initState() {
     super.initState();
-    animation = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-    tween = BarChartTween(
-      BarChart.empty(size),
-      BarChart.makeBars(size, counter),
-    );
-    animation.forward();
+    initData();
   }
 
   @override
   void dispose() {
     animation.dispose();
     super.dispose();
+  }
+
+  void initData() {
+    setState(() {
+      counter = 0;
+      animation = AnimationController(
+        duration: const Duration(milliseconds: 300),
+        vsync: this,
+      );
+      tween = BarChartTween(
+        BarChart.empty(size),
+        BarChart.makeBars(size, counter),
+      );
+      animation.forward();
+    });
   }
 
   void changeData() {
@@ -56,6 +63,16 @@ class ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
         bars = BarChart.makeBars(size, counter);
       });
     }
+  }
+
+  Padding buttonWrapper(IconData icon, Function action) {
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: FloatingActionButton(
+        child: Icon(icon),
+        onPressed: action,
+      ),
+    );
   }
 
   @override
@@ -71,10 +88,14 @@ class ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.arrow_forward),
-        onPressed: changeData,
-      ),
+      floatingActionButton: new Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          buttonWrapper(Icons.file_upload, changeData),
+          buttonWrapper(Icons.refresh, initData),
+          buttonWrapper(Icons.arrow_forward, changeData),
+        ]
+      )
     );
   }
 }
