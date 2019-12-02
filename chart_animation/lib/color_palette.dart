@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 
 class ColorPalette {
   static final ColorPalette primary = ColorPalette(<Color>[
-    Colors.blue[400],
     Colors.red[400],
     Colors.green[400],
+    Colors.blue[400],
     Colors.yellow[400],
     Colors.purple[400],
     Colors.orange[400],

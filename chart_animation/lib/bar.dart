@@ -16,7 +16,7 @@ class BarChart {
 
   factory BarChart.makeBars(Size size, int iterNumber, List<double> currHeights) {
     final ranks = computeRanks(currHeights);
-    final barCount = ranks.length;
+    final barCount = currHeights.length;
     final barDistance = size.width / (1 + barCount);
     const barWidthFraction = 0.75;
     final barWidth = barDistance * barWidthFraction;
@@ -42,7 +42,7 @@ class BarChart {
       for (final h2 in currHeights) {
         if (h1 > h2) rank++;
       }
-      ranks.add(currHeights.length - rank);
+      ranks.add(currHeights.length - rank - 1);
     }
     return ranks;
   }
@@ -50,25 +50,33 @@ class BarChart {
 
 class BarChartTween extends Tween<BarChart> {
   BarChartTween(BarChart begin, BarChart end) : super(begin: begin, end: end) {
-    final bMax = begin.bars.length;
-    final eMax = end.bars.length;
-    var b = 0;
-    var e = 0;
-    while (b + e < bMax + eMax) {
-      if (b < bMax && (e == eMax || begin.bars[b] < end.bars[e])) {
-        _tweens.add(BarTween(begin.bars[b], begin.bars[b].collapsed));
-        b++;
+    var i = 0;
+    while (i < begin.bars.length) {
+      if (end.bars[i].rank != begin.bars[i].rank) {
+        _tweens.add(BarTween(begin.bars[i], end.bars[i]));
       }
-      else if (e < eMax && (b == bMax || end.bars[e] < begin.bars[b])) {
-        _tweens.add(BarTween(end.bars[e].collapsed, end.bars[e]));
-        e++;
-      }
-      else {
-        _tweens.add(BarTween(begin.bars[b], end.bars[e]));
-        b++;
-        e++;
-      }
+      i++;
     }
+
+//    final bMax = begin.bars.length;
+//    final eMax = end.bars.length;
+//    var b = 0;
+//    var e = 0;
+//    while (b + e < bMax + eMax) {
+//      if (b < bMax && (e == eMax || begin.bars[b].rank < end.bars[e].rank)) {
+//        _tweens.add(BarTween(begin.bars[b], begin.bars[b].collapsed));
+//        b++;
+//      }
+//      else if (e < eMax && (b == bMax || end.bars[e].rank < begin.bars[b].rank)) {
+//        _tweens.add(BarTween(end.bars[e].collapsed, end.bars[e]));
+//        e++;
+//      }
+//      else {
+//        _tweens.add(BarTween(begin.bars[b], end.bars[e]));
+//        b++;
+//        e++;
+//      }
+//    }
   }
 
   final _tweens = <BarTween>[];
@@ -92,24 +100,21 @@ class Bar {
   final Color color;
 
   Bar get collapsed => Bar(rank, y, 0.0, 0.0, color);
-  bool operator <(Bar other) => rank < other.rank;
 
   static Bar lerp(Bar begin, Bar end, double t) {
-    assert(begin.rank == end.rank);
     return Bar(
       begin.rank,
       lerpDouble(begin.y, end.y, t),
       lerpDouble(begin.width, end.width, t),
       lerpDouble(begin.height, end.height, t),
-      Color.lerp(begin.color, end.color, t),
+      begin.color,
+//      Color.lerp(begin.color, end.color, t),
     );
   }
 }
 
 class BarTween extends Tween<Bar> {
-  BarTween(Bar begin, Bar end) : super(begin: begin, end: end) {
-    assert(begin.rank == end.rank);
-  }
+  BarTween(Bar begin, Bar end) : super(begin: begin, end: end);
 
   @override
   Bar lerp(double t) => Bar.lerp(begin, end, t);
