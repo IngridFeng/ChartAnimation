@@ -40,7 +40,7 @@ class ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
 
   final List<List<double>> heightsData = [
     [10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0],
-    [90.0, 30.0, 40.0, 50.0, 60.0, 70.0, 70.0],
+    [90.0, 10.0, 40.0, 50.0, 60.0, 70.0, 70.0],
     [100.0, 110.0, 50.0, 60.0, 70.0, 80.0, 70.0],
   ];
 

@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/animation.dart';
@@ -36,13 +35,13 @@ class BarChart {
   }
 
   static List<int> computeRanks(List<double> currHeights) {
-    final ranks = <int>[];
-    for (final h1 in currHeights) {
-      var rank = 0;
-      for (final h2 in currHeights) {
-        if (h1 > h2) rank++;
-      }
-      ranks.add(currHeights.length - rank - 1);
+    int barCount = currHeights.length;
+    var indexAndHeights = List.generate(barCount, (i) => [i, currHeights[i]]);
+    indexAndHeights.sort((a, b) => b[1].compareTo(a[1]) == 0 ? a[0].compareTo(b[0]) : b[1].compareTo(a[1]));
+
+    final ranks = new List<int>.filled(barCount, 0, growable: true);
+    for (var i = 0; i < barCount; i++) {
+      ranks[indexAndHeights[i][0]] = i;
     }
     return ranks;
   }
@@ -50,10 +49,8 @@ class BarChart {
 
 class BarChartTween extends Tween<BarChart> {
   BarChartTween(BarChart begin, BarChart end) : super(begin: begin, end: end) {
-    var i = 0;
-    while (i < begin.bars.length) {
+    for (var i = 0; i < begin.bars.length; i++) {
       _tweens.add(BarTween(begin.bars[i], end.bars[i]));
-      i++;
     }
   }
 
@@ -86,7 +83,6 @@ class Bar {
       lerpDouble(begin.width, end.width, t),
       lerpDouble(begin.height, end.height, t),
       begin.color,
-//      Color.lerp(begin.color, end.color, t),
     );
   }
 }
