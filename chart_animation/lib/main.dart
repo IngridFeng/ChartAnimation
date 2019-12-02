@@ -1,7 +1,5 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
-
 import 'bar.dart';
 
 void main() {
@@ -17,10 +15,10 @@ class ChartPage extends StatefulWidget {
   final String title;
 
   @override
-  ChartPageState createState() => ChartPageState();
+  _ChartPageState createState() => new _ChartPageState();
 }
 
-class ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
+class _ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
   static const size = const Size(400.0, 400.0);
   int counter;
   AnimationController animation;
@@ -59,7 +57,14 @@ class ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
     });
   }
 
-  void changeData() {
+  void changeData() async {
+    while (counter < heightsData.length) {
+      displayData();
+      await Future.delayed(const Duration(milliseconds: 300));
+    }
+  }
+
+  void displayData() {
     setState(() {
       tween = BarChartTween(
         tween.evaluate(animation),
@@ -68,8 +73,6 @@ class ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
       animation.forward(from: 0.0);
       counter++;
     });
-//    while (counter < heightsData.length) {
-//    }
   }
 
   Padding buttonWrapper(IconData icon, Function action) {

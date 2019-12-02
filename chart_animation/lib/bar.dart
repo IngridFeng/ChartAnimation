@@ -49,8 +49,15 @@ class BarChart {
 
 class BarChartTween extends Tween<BarChart> {
   BarChartTween(BarChart begin, BarChart end) : super(begin: begin, end: end) {
-    for (var i = 0; i < begin.bars.length; i++) {
-      _tweens.add(BarTween(begin.bars[i], end.bars[i]));
+    if (begin.bars.isEmpty) {
+      for (var i = 0; i < end.bars.length; i++) {
+        _tweens.add(BarTween(end.bars[i].collapsed, end.bars[i]));
+      }
+    }
+    else {
+      for (var i = 0; i < end.bars.length; i++) {
+        _tweens.add(BarTween(begin.bars[i], end.bars[i]));
+      }
     }
   }
 
