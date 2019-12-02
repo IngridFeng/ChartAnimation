@@ -38,6 +38,12 @@ class ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
     super.dispose();
   }
 
+  final List<List<double>> heightsData = [
+    [10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0],
+    [90.0, 10.0, 40.0, 50.0, 60.0, 70.0, 70.0],
+    [100.0, 110.0, 50.0, 60.0, 70.0, 80.0, 70.0],
+  ];
+
   void initData() {
     setState(() {
       counter = 0;
@@ -47,22 +53,23 @@ class ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
       );
       tween = BarChartTween(
         BarChart.empty(size),
-        BarChart.makeBars(size, counter),
+        BarChart.makeBars(size, counter, heightsData[counter]),
       );
       animation.forward();
     });
   }
 
   void changeData() {
-    BarChart bars = BarChart.makeBars(size, counter);
-    while (bars != null) {
-      setState(() {
-        tween = BarChartTween(tween.evaluate(animation), bars,);
-        animation.forward(from: 0.0);
-        counter++;
-        bars = BarChart.makeBars(size, counter);
-      });
-    }
+    setState(() {
+      tween = BarChartTween(
+        tween.evaluate(animation),
+        BarChart.makeBars(size, counter, heightsData[counter]),
+      );
+      animation.forward(from: 0.0);
+      counter++;
+    });
+//    while (counter < heightsData.length) {
+//    }
   }
 
   Padding buttonWrapper(IconData icon, Function action) {
