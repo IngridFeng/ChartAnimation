@@ -52,31 +52,9 @@ class BarChartTween extends Tween<BarChart> {
   BarChartTween(BarChart begin, BarChart end) : super(begin: begin, end: end) {
     var i = 0;
     while (i < begin.bars.length) {
-      if (end.bars[i].rank != begin.bars[i].rank) {
-        _tweens.add(BarTween(begin.bars[i], end.bars[i]));
-      }
+      _tweens.add(BarTween(begin.bars[i], end.bars[i]));
       i++;
     }
-
-//    final bMax = begin.bars.length;
-//    final eMax = end.bars.length;
-//    var b = 0;
-//    var e = 0;
-//    while (b + e < bMax + eMax) {
-//      if (b < bMax && (e == eMax || begin.bars[b].rank < end.bars[e].rank)) {
-//        _tweens.add(BarTween(begin.bars[b], begin.bars[b].collapsed));
-//        b++;
-//      }
-//      else if (e < eMax && (b == bMax || end.bars[e].rank < begin.bars[b].rank)) {
-//        _tweens.add(BarTween(end.bars[e].collapsed, end.bars[e]));
-//        e++;
-//      }
-//      else {
-//        _tweens.add(BarTween(begin.bars[b], end.bars[e]));
-//        b++;
-//        e++;
-//      }
-//    }
   }
 
   final _tweens = <BarTween>[];
