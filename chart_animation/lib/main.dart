@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 import 'bar.dart';
+import 'dart:math';
 
 void main() {
   runApp(MaterialApp(
@@ -20,9 +21,11 @@ class ChartPage extends StatefulWidget {
 
 class _ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
   static const size = const Size(400.0, 400.0);
+  static const duration = 300;
   int counter;
   AnimationController animation;
   BarChartTween tween;
+  var heightsData = [];
 
   @override
   void initState() {
@@ -36,17 +39,24 @@ class _ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
     super.dispose();
   }
 
-  final List<List<double>> heightsData = [
-    [10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0],
-    [90.0, 10.0, 40.0, 50.0, 60.0, 70.0, 70.0],
-    [100.0, 110.0, 50.0, 60.0, 70.0, 80.0, 70.0],
-  ];
+  void buildHeightsData() {
+    var random = new Random();
+    for (var i = 0; i < 10; i++) {
+      List<double> currHeights = [];
+      for (var j = 0; j < 7; j++) {
+        currHeights.add(random.nextDouble() * 400.0);
+      }
+      heightsData.add(currHeights);
+    }
+  }
 
   void initData() {
+    heightsData = [];
+    buildHeightsData();
     setState(() {
       counter = 0;
       animation = AnimationController(
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: duration),
         vsync: this,
       );
       tween = BarChartTween(
@@ -60,7 +70,7 @@ class _ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
   void changeData() async {
     while (counter < heightsData.length) {
       displayData();
-      await Future.delayed(const Duration(milliseconds: 300));
+      await Future.delayed(const Duration(milliseconds: duration * 2));
     }
   }
 
