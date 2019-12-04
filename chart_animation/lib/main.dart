@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
-import 'bar.dart';
+import 'package:chart_animation/sheets.dart';
+import 'package:chart_animation/bar.dart';
 import 'dart:math';
 
 void main() {
@@ -26,6 +27,7 @@ class _ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
   AnimationController animation;
   BarChartTween tween;
   var heightsData = [];
+  final sheets = GoogleSheets();
 
   @override
   void initState() {
@@ -85,6 +87,12 @@ class _ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
     });
   }
 
+  void readFromSheets() async {
+    String spreadsheetId = "1QMNPq16ko-AjyQT14PIzwAmbTXSDUD_3tNatDlSK4Zk";
+    String range = "A1:A2";
+    await sheets.readData(spreadsheetId, range);
+  }
+
   Padding buttonWrapper(IconData icon, Function action) {
     return Padding(
       padding: EdgeInsets.all(8.0),
@@ -111,7 +119,7 @@ class _ChartPageState extends State<ChartPage> with TickerProviderStateMixin{
       floatingActionButton: new Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          buttonWrapper(Icons.file_upload, changeData),
+          buttonWrapper(Icons.add, readFromSheets),
           buttonWrapper(Icons.refresh, initData),
           buttonWrapper(Icons.arrow_forward, changeData),
         ]
